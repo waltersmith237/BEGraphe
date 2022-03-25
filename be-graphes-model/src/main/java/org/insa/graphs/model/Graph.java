@@ -127,5 +127,6 @@ public final class Graph {
         return String.format("%s[id=%s, name=%s, #nodes=%d]", getClass().getCanonicalName(),
                 getMapId(), getMapName(), size());
     }
+  
 
 }
