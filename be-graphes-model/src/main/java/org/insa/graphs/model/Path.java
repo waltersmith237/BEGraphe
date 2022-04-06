@@ -36,21 +36,28 @@ public class Path {
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         Arc chemin = null;
-        for (int i=0; i<nodes.size(); ++i){
-        	double minimumTime = Double.MAX_VALUE;
-        	for (int j=0 ; j <= nodes.get(i).getNumberOfSuccessors();j++) {
-        		if(nodes.get(i).getSuccessors().get(j).getDestination()== nodes.get(i+1)) {
-        			if(nodes.get(i).getSuccessors().get(j).getMinimumTravelTime() <= minimumTime) {
-        				minimumTime = nodes.get(i).getSuccessors().get(j).getMinimumTravelTime();
-        				chemin = nodes.get(i).getSuccessors().get(j);
-        			}
-        		}
-        	}
-        	arcs.add(chemin);
-           
+        if (nodes.size() == 0) {
+        	return new Path (graph);
         }
-        
-        
+        if (nodes.size() == 1) {
+        	return new Path(graph, nodes.get(0));
+        }
+        for (int i = 0; i < nodes.size()-1; i++) {
+        	double minimumTime = Double.MAX_VALUE;
+        	List<Arc> successors = nodes.get(i).getSuccessors();
+        	for (Arc arc : successors) {
+    			if (arc.getDestination() == nodes.get(i+1)) {
+    				if(arc.getMinimumTravelTime() <= minimumTime) {
+        				minimumTime = arc.getMinimumTravelTime();
+        				chemin = arc;
+        			}
+    			}
+    		}
+        	arcs.add(chemin);
+    		if(minimumTime == Double.MAX_VALUE) {
+    			throw new IllegalArgumentException("Cannot create the fastest path from invalid list of nodes.");
+    		}
+        }
         return new Path(graph, arcs);
     }
 
@@ -71,9 +78,14 @@ public class Path {
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        
         Arc chemin = null;
-        for (int i=0; i<nodes.size(); ++i){
+        if (nodes.size() == 0) {
+        	return new Path(graph); 
+        }
+        if (nodes.size() == 1) {
+        	return new Path(graph, nodes.get(0));
+        }
+        for (int i=0; i < nodes.size()-1; ++i){
             double minimumDistance = Double.MAX_VALUE;
             List<Arc> successors = nodes.get(i).getSuccessors();
         	for (Arc arc : successors) {
@@ -85,9 +97,10 @@ public class Path {
         		}
         	}
         	arcs.add(chemin);
-           
-        }
-        
+        	if( minimumDistance == Double.MAX_VALUE) {
+        		throw new IllegalArgumentException("Cannot create the fastest path from invalid list of nodes.");
+	    	 }
+    	}
         return new Path(graph, arcs);
     }
 
@@ -222,7 +235,7 @@ public class Path {
      * <ul>
      * <li>it is empty;</li>
      * <li>it contains a single node (without arcs);</li>
-     * <li>the first arc has for origin the origin of the path and, for two
+     * <li>the first arc has for or!booligin the origin of the path and, for two
      * consecutive arcs, the destination of the first one is the origin of the
      * second one.</li>
      * </ul>
@@ -297,10 +310,13 @@ public class Path {
     public double getMinimumTravelTime() {
     	int i = 0;
     	float MinimumTravelTime = 0;
-    	while(i<= this.arcs.size()) {
+    	for (Arc arc : this.arcs) {
+    		MinimumTravelTime += arc.getMinimumTravelTime();
+    	}
+    	/*while(i<= this.arcs.size()) {
     		MinimumTravelTime += this.arcs.get(i).getMinimumTravelTime();
     		i++;
-    	}
+    	}*/
     	
         return MinimumTravelTime ;
     }
