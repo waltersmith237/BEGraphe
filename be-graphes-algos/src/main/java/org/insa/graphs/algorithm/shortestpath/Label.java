@@ -1,28 +1,55 @@
 package org.insa.graphs.algorithm.shortestpath;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
-public class Label {
+public class Label  implements Comparable<Label>{
 	private Node currentNode;
 	private boolean mark;
 	private double costFromOrigin;
 	private Arc father;
 	
-	public 	Label() {
-		this.currentNode = null;
+	public 	Label(Node node) {
+		this.currentNode = node;
 		this.mark = false;
-		this.costFromOrigin = Double.MAX_VALUE; 
+		this.costFromOrigin = Double.POSITIVE_INFINITY; 
 		this.father = null;
 	
 	}	
-	public double gestCost() {
+	
+	
+	public Node getNode( ) {
+		return this.currentNode;
+	}
+	public boolean getMark() {
+		return this.mark;
+	}
+	public void setMark() {
+		 this.mark = true;
+	}
+	public Arc getArcFather() {
+		return this.father;
+	}
+	public void setFather(Arc father) {
+		this.father = father;
+	}
+	public void  setCostFromOrigin(double cost) {
+		this.costFromOrigin = cost;
+	}
+	public double getCostFromOrigin() {
 		return this.costFromOrigin;
 	}
-	public void setNode(Node node ) {
-		 this.currentNode = node;
-	}
+	
+	
+	 public int compareTo(Label other) {
+		 
+		 return Double.compare(getCostFromOrigin(), other.getCostFromOrigin());
+	      
+	    }
+	
+	
+	
 	
 	
 }
