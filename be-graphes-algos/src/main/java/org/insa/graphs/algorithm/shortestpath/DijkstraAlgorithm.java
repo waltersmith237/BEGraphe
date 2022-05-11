@@ -46,17 +46,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
 		labels[data.getOrigin().getId()].setCostFromOrigin(0);
 		heap.insert(labels[data.getOrigin().getId()]);
-       
+		boolean destinationReached = false;
         
         //start dijkstra 
-        //creation number of Not marked node
-        int nbNotMark = nbNodes;
-        
-       
-        while(!heap.isEmpty()&& nbNotMark != 0) {
-        	Label lab =  heap.findMin();
+    
+        while(!heap.isEmpty() && !destinationReached ) {
+        	Label lab =  heap.deleteMin();
+        	if (lab.getNode() == data.getDestination()) {
+        		destinationReached = true;
+        	}
         	lab.setMark();
-        	nbNotMark--;
         	//List of successors of the curent label
         	List<Arc> successors = lab.getNode().getSuccessors();
         	
@@ -72,6 +71,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 							  labels[successor.getDestination().getId()].setFather(successor);
 							  heap.insert(labels[successor.getDestination().getId()]);
 							  predecessorArcs[successor.getDestination().getId()]=lab.getArcFather();
+							  notifyNodeReached(successor.getDestination());
 						  }
 						  else {
 							  heap.remove(labels[successor.getDestination().getId()]);
@@ -79,7 +79,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 							  labels[successor.getDestination().getId()].setFather(successor);
 							  predecessorArcs[successor.getDestination().getId()]=lab.getArcFather();
 							  heap.insert(labels[successor.getDestination().getId()]);
-							  
+							  notifyNodeReached(successor.getDestination());
 						  }
 
 					  
@@ -87,7 +87,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 				}
         	
         	}
-        	heap.remove(lab);
+        
         	}
         
         //solution 
