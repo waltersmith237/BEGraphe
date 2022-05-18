@@ -5,10 +5,10 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
 public class Label  implements Comparable<Label>{
-	private Node currentNode;
-	private boolean mark;
-	private double costFromOrigin;
-	private Arc father;
+	protected Node currentNode;
+	protected boolean mark;
+	protected double costFromOrigin;
+	protected Arc father;
 	
 	public 	Label(Node node) {
 		this.currentNode = node;
@@ -40,11 +40,14 @@ public class Label  implements Comparable<Label>{
 	public double getCostFromOrigin() {
 		return this.costFromOrigin;
 	}
+	public double getTotalCost() {
+		return this.costFromOrigin;
+	}
 	
 	
 	 public int compareTo(Label other) {
 		 
-		 return Double.compare(getCostFromOrigin(), other.getCostFromOrigin());
+		 return Double.compare(getTotalCost(), other.getTotalCost());
 	      
 	    }
 	

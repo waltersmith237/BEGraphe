@@ -13,6 +13,7 @@ import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
+	
 
 	public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
@@ -24,7 +25,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         final ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
         final int nbNodes = graph.size();
-        
      // Initialize list of Nodes.
         List<Node> nodes = graph.getNodes();
         //Node[] nodes = new Node[nbNodes];
@@ -40,9 +40,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
      //List<Label> label = new ArrayList<Label>();
         Label[] labels = new Label[nbNodes];
-        for (Node node:nodes) {
+        /*for (Node node:nodes) {
         	labels[node.getId()]=new Label(node);
-        }
+        }*/
+        Node dest = data.getDestination();
+        labels = initLabel(nbNodes,nodes,dest);
         
 		labels[data.getOrigin().getId()].setCostFromOrigin(0);
 		heap.insert(labels[data.getOrigin().getId()]);
@@ -62,7 +64,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	for(Arc successor : successors ) {
         		
 				if(labels[successor.getDestination().getId()].getMark()==false) { 
-					  double min =  Math.min(labels[successor.getDestination().getId()].getCostFromOrigin(),lab.getCostFromOrigin()+successor.getLength());
+					  double min =  Math.min(labels[successor.getDestination().getId()].getCostFromOrigin(),lab.getCostFromOrigin() + data.getCost(successor));
 					  
 					  if((lab.getCostFromOrigin()+successor.getLength()) <  labels[successor.getDestination().getId()].getCostFromOrigin()) {
 						  if(labels[successor.getDestination().getId()].getCostFromOrigin() == Double.POSITIVE_INFINITY) {
@@ -121,6 +123,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 
         return solution;
+    }
+    public Label[] initLabel(int nbNodes, List <Node> nodes,Node destination) {
+    	//List<Label> label = new ArrayList<Label>();
+        Label[] labels = new Label[nbNodes];
+        for (Node node:nodes) {
+        	labels[node.getId()]=new Label(node);
+        	
+        }
+        return labels;
+    	
     }
 
 }
