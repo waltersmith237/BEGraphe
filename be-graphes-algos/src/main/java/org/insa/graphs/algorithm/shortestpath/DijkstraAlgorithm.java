@@ -40,12 +40,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
      //List<Label> label = new ArrayList<Label>();
         Label[] labels = new Label[nbNodes];
-        /*for (Node node:nodes) {
-        	labels[node.getId()]=new Label(node);
-        }*/
         Node dest = data.getDestination();
-        labels = initLabel(nbNodes,nodes,dest);
         
+        labels[data.getOrigin().getId()] = new Label(data.getOrigin());
 		labels[data.getOrigin().getId()].setCostFromOrigin(0);
 		heap.insert(labels[data.getOrigin().getId()]);
 		boolean destinationReached = false;
@@ -62,8 +59,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	List<Arc> successors = lab.getNode().getSuccessors();
         	
         	for(Arc successor : successors ) {
+        		labels = initLabel(labels,successor.getDestination(),dest);
         		
-				if(labels[successor.getDestination().getId()].getMark()==false) { 
+				if(labels[successor.getDestination().getId()].getMark()==false && data.isAllowed(successor)) { 
 					  double min =  Math.min(labels[successor.getDestination().getId()].getCostFromOrigin(),lab.getCostFromOrigin() + data.getCost(successor));
 					  
 					  if((lab.getCostFromOrigin()+successor.getLength()) <  labels[successor.getDestination().getId()].getCostFromOrigin()) {
@@ -124,13 +122,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         return solution;
     }
-    public Label[] initLabel(int nbNodes, List <Node> nodes,Node destination) {
+    public Label[] initLabel(Label[] labels, Node node,Node destination) {
     	//List<Label> label = new ArrayList<Label>();
-        Label[] labels = new Label[nbNodes];
-        for (Node node:nodes) {
-        	labels[node.getId()]=new Label(node);
-        	
-        }
+    	if(labels[node.getId()]==null) {
+    		labels[node.getId()] = new Label(node);
+    	}
+       
         return labels;
     	
     }

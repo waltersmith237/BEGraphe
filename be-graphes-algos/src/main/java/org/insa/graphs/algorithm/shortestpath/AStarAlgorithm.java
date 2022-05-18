@@ -18,14 +18,16 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         super(data);
     }
     
-    public LabelStar[] initLabel(int nbNodes, List <Node> nodes,Node destination) {
-    	//List<Label> label = new ArrayList<Label>();
-        LabelStar[] labels = new LabelStar[nbNodes];
-        for (Node node:nodes) {
-        	double heuristicCost = node.getPoint().distanceTo(destination.getPoint());
-        	labels[node.getId()]=new LabelStar(node,heuristicCost);
-        }
+    public Label[] initLabel(Label[] labels, Node node,Node destination) {
+        double heuristicCost = node.getPoint().distanceTo(destination.getPoint());
+        if(labels[node.getId()]==null) {
+    		labels[node.getId()] = new LabelStar(node,heuristicCost);
+    	}
+        
         return labels;
  }
+    
+    	
+    
 }
 
