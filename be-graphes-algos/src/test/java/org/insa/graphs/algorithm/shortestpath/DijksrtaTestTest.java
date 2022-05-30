@@ -137,6 +137,7 @@ class DijksrtaTestTest {
 			}
 			} catch (Exception e) {
 				System.out.println(e.toString());	
+				e.printStackTrace();
 			}
 	}
 	

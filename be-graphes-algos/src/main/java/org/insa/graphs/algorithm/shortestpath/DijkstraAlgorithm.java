@@ -31,18 +31,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
      // Initialize array of predecessors.
         Arc[] predecessorArcs = new Arc[nbNodes];
-        
-        
      //create the binary Heap
         BinaryHeap<Label> heap = new BinaryHeap<Label>();
         
         notifyOriginProcessed(data.getOrigin());
-        
+        /*===============================initialisation de l'algorithme ================================================*/
      //List<Label> label = new ArrayList<Label>();
-        Label[] labels = new Label[nbNodes];
+        Label[] labels = new Label[nbNodes]; //creation du tableau de labels
         Node dest = data.getDestination();
         
         labels[data.getOrigin().getId()] = new Label(data.getOrigin());
+        /* le cout de l'origine à zero et insertion de l'origine dans le Heap*/
 		labels[data.getOrigin().getId()].setCostFromOrigin(0);
 		heap.insert(labels[data.getOrigin().getId()]);
 		boolean destinationReached = false;
@@ -59,12 +58,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	List<Arc> successors = lab.getNode().getSuccessors();
         	
         	for(Arc successor : successors ) {
+        		/* ============create labels just for current node successors in order to optimize our algorithm===========*/
         		labels = initLabel(labels,successor.getDestination(),dest);
         		
 				if(labels[successor.getDestination().getId()].getMark()==false && data.isAllowed(successor)) { 
 					  double min =  Math.min(labels[successor.getDestination().getId()].getCostFromOrigin(),lab.getCostFromOrigin() + data.getCost(successor));
 					  
 					  if((lab.getCostFromOrigin()+successor.getLength()) <  labels[successor.getDestination().getId()].getCostFromOrigin()) {
+						  /*the first time we visit this node*/
 						  if(labels[successor.getDestination().getId()].getCostFromOrigin() == Double.POSITIVE_INFINITY) {
 
 							  labels[successor.getDestination().getId()].setCostFromOrigin(min);
@@ -73,6 +74,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 							  predecessorArcs[successor.getDestination().getId()]=lab.getArcFather();
 							  notifyNodeReached(successor.getDestination());
 						  }
+						  /* the node have been visited before and we have to update his label(costFromOrigin and Father)*/
 						  else {
 							  heap.remove(labels[successor.getDestination().getId()]);
 							  labels[successor.getDestination().getId()].setCostFromOrigin(min);
@@ -116,10 +118,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             // Create the final solution.
             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
         }
-
-        
-
-
         return solution;
     }
     public Label[] initLabel(Label[] labels, Node node,Node destination) {

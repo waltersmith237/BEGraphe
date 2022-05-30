@@ -49,12 +49,7 @@ class StarTest extends DijksrtaTestTest{
 				}
 				} catch (Exception e) {
 					System.out.println(e.toString());
-					
-			
-			
-				
-			
-		}
+				}
 		}
 
 	public ShortestPathAlgorithm generateAlgorithm(ShortestPathData data){
